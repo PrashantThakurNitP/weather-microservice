@@ -9,7 +9,7 @@ pipeline{
     stages{
         stage("Build maven project"){
             steps{
-                checkout scmGit(branches: [[name: "*/${params.BRANCH_NAME}"]], extensions: [], userRemoteConfigs: [[url: 'https://github.com/PrashantThakurNitP/Weather-Service.git']])
+                checkout scmGit(branches: [[name: "*/${params.BRANCH_NAME}"]], extensions: [], userRemoteConfigs: [[url: 'https://github.com/PrashantThakurNitP/weather-microservice.git']])
                 sh 'mvn clean package'
             }
         }
