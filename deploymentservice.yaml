@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment # Kubernetes resource kind we are creating
+metadata:
+  name: weather-service-k8s
+spec:
+  selector:
+    matchLabels:
+      app: weather-service-k8s #match all pod with label app:weather-service-k8s
+  replicas: 1 # Number of replicas that will be created for this deployment
+  template:
+    metadata:
+      labels:
+        app: weather-service-k8s
+    spec:
+      containers:
+        - name: weather-service-k8s
+          image: prathaku3docker/weather-microservice:latest
+          # Image that will be used to containers in the cluster
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: weather-api-credentials
+# The port that the container is running on in the cluster
+
+---
+apiVersion: v1 # Kubernetes API version
+kind: Service # Kubernetes resource kind we are creating
+metadata: # Metadata of the resource kind we are creating
+  name: weather-service-svc
+spec:
+  type: NodePort # type of the service.
+  selector:
+    app: weather-service-k8s
+  ports:
+    - protocol: "TCP"
+      port: 8080 # The port that the service is running on in the cluster
+      targetPort: 8080 # The port exposed by the service
+      nodePort: 31000
